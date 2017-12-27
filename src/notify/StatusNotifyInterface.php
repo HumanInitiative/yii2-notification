@@ -1,21 +1,20 @@
 <?php
 
-namespace pkpudev\notification;
+namespace pkpudev\notification\notify;
 
 use yii\db\ActiveRecordInterface;
 
+/**
+ * @author Zein Miftah <zeinmiftah@gmail.com>
+ */
 interface StatusNotifyInterface
 {
 	/**
-	 * @return MailMessage
+	 * @return yii\mail\MessageInterface;
 	 */
 	public function getMessage();
 	/**
-	 * @return Recipient[]
+	 * @return object|array
 	 */
-	public function getToAddress(ActiveRecordInterface $model);
-	/**
-	 * @return Recipient[]
-	 */
-	public function getCcAddress(ActiveRecordInterface $model);
+	public function getParams();
 }

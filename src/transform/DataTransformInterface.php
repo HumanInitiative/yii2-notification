@@ -18,4 +18,9 @@ interface DataTransformInterface
 	 * @return object|array
 	 */
 	public function getParams();
+	/**
+	 * Get Model object
+	 * @return ActiveRecordInterface
+	 */
+	public function getModel();
 }

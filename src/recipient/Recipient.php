@@ -32,17 +32,30 @@ class Recipient extends BaseObject
 
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * @param array $config
 	 */
 	public function __construct($config=[])
 	{
-		$this->companyId = $config['companyId'];
-		$this->role = $config['role'];
-		$this->userId = $config['userId'];
-		$this->userName = $config['userName'];
-		$this->userEmail = $config['userEmail'];
-
 		parent::__construct($config);
+	}
+
+	/**
+	 * Get valid email format
+	 *
+	 * @return array
+	 */
+	public function getEmail()
+	{
+		return [$this->userEmail=>$this->userName];
+	}
+	/**
+	 * Get role
+	 *
+	 * @return string
+	 */
+	public function getRole()
+	{
+		return $this->role;
 	}
 }

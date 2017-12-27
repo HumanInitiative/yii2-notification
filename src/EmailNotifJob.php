@@ -2,7 +2,10 @@
 
 namespace pkpudev\notification;
 
+use pkpudev\notification\notify\StatusNotifyInterface;
 use yii\base\BaseObject;
+use yii\mail\MailerInterface;
+use yii\mail\MessageInterface;
 use yii\queue\JobInterface;
 
 /**
@@ -11,24 +14,24 @@ use yii\queue\JobInterface;
 class EmailNotifJob extends BaseObject implements JobInterface
 {
 	/**
-	 * @var BaseMailer
+	 * @var MailerInterface
 	 */
 	private $mailer;
 	/**
-	 * @var StatusNotifInterface
+	 * @var StatusNotifyInterface
 	 */
-	private $statusNotif;
+	private $statusNotify;
 
 	/**
 	 * Class construct method
 	 * 
-	 * @param BaseMailer $mailer
-	 * @param StatusNotifInterface $statusNotif
+	 * @param MailerInterface $mailer
+	 * @param StatusNotifyInterface $statusNotify
 	 */
-	public function __construct(BaseMailer $mailer, StatusNotifInterface $statusNotif)
+	public function __construct(MailerInterface $mailer, StatusNotifyInterface $statusNotify)
 	{
 		$this->mailer = $mailer;
-		$this->statusNotif = $statusNotif;
+		$this->statusNotify = $statusNotify;
 	}
 
 	/**
@@ -36,19 +39,15 @@ class EmailNotifJob extends BaseObject implements JobInterface
 	 */
 	public function execute($queue)
 	{
-		return false;
-	}
+		$viewFile = $this->statusNotify->getViewFile();
+		$message = $this->statusNotify->getMessage();
+		$params = (array)$this->statusNotify->getParams();
 
-	/**
-	 * Sending actual email
-	 * 
-	 * @param string $viewFile
-	 * @param MailMessage $message
-	 * @param array $params
-	 * @return bool
-	 */
-	protected function send($viewFile, MailMessage $message, $params)
-	{
-		return false;
+		return $this->mailer
+			->compose($viewFile, $params)
+			->setTo($message->to)
+			->setSubject($message->subject)
+			->setCC($message->cc)
+			->send();
 	}
 }

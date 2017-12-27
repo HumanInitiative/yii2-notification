@@ -3,7 +3,8 @@
 namespace pkpudev\notification;
 
 use pkpudev\notification\recipient\Recipient;
-use yii\mail\BaseMailer;
+use yii\base\Controller;
+use yii\mail\MailerInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -11,50 +12,76 @@ use yii\mail\BaseMailer;
 class MailerFactory
 {
 	/**
-	 * Factory for Mailer
+	 * Compose Mailer
 	 * 
-	 * @param string $viewMail
-	 * @param Recipient $recipient
-	 * @param int $companyId
-	 * @return BaseMailer
+	 * @param MailerInterface $mailer
+	 * @param ViewMail $viewMail
+	 * @param Recipient $sender
+	 * @return MailerInterface
 	 */
-	public static function makeMailer($viewMail, Recipient $recipient, $companyId)
+	public static function composeMailer(MailerInterface $mailer, ViewMail $viewMail, Recipient $sender)
 	{
-		return new BaseMailer;
+		$mailer->setView($viewMail);
+		return $mailer->setFrom($sender->getEmail());
 	}
 
 	/**
 	 * Factory for ViewMail
 	 * 
-	 * @param int $companyId
-	 * @param string $title
-	 * @param string $subject
+	 * @param Controller $controller
+	 * @param string $footerFile
+	 * @param array $params
 	 * @return ViewMail
 	 */
-	public static function makeView($companyId, $title, $subject)
+	public static function makeView(Controller $controller, $footerFile, $params)
 	{
-		return new ViewMail;
+		$required = ['address','company','logo','site','subject','title'];
+		static::parameterChecking($required, $params);
+
+		$footerHtml = $controller->renderPartial($footerFile, [
+			'address'=>$params['address'],
+			'company'=>$params['company'],
+			'site'=>$params['site']
+		]);
+
+		$viewMail = new ViewMail;
+		$viewMail->title = $params['title'];
+		$viewMail->header = $params['subject'];
+		$viewMail->footer = $footerHtml;
+		$viewMail->companyLogo = $params['logo'];
+
+		return $viewMail;
 	}
 
 	/**
 	 * Factory for sender/recipient
 	 * 
+	 * @param string $name
+	 * @param string $email
 	 * @return Recipient
 	 */
-	public static function makeSender()
+	public static function makeSender($name, $email)
 	{
-		return new Recipient;
+		$recipient = new Recipient;
+		$recipient->userName = $name;
+		$recipient->userEmail = $email;
+		return $recipient;
 	}
 
 	/**
-	 * Get Footer Html
+	 * Check parameters with required parameters
 	 * 
-	 * @param Controller $controller
-	 * @param int $companyId
-	 * @return string
+	 * @return bool
 	 */
-	protected static function getFooterHtml($controller, $companyId)
+	protected static function parameterChecking($required, $params)
 	{
-		return null;
+		$keys = array_keys($params); sort($keys);
+		if ($keys != $required) {
+			$result = str_repeat("'%s', ", count($required));
+			$strstr = substr($result, 0, strlen($result)-2);
+			$message = vsprintf("Need {$strstr} parameters!", $required);
+			throw new yii\base\InvalidConfigException($message);
+		}
+		return true;
 	}
 }
