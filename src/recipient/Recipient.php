@@ -12,23 +12,23 @@ class Recipient extends BaseObject
 	/**
 	 * @var int $companyId
 	 */
-	private $companyId;
+	public $companyId;
 	/**
 	 * @var string $role
 	 */
-	private $role;
+	public $role;
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	public $userId;
 	/**
 	 * @var string $userName
 	 */
-	private $userName;
+	public $userName;
 	/**
 	 * @var string $userEmail
 	 */
-	private $userEmail;
+	public $userEmail;
 
 	/**
 	 * Class constructor
@@ -48,14 +48,5 @@ class Recipient extends BaseObject
 	public function getEmail()
 	{
 		return [$this->userEmail=>$this->userName];
-	}
-	/**
-	 * Get role
-	 *
-	 * @return string
-	 */
-	public function getRole()
-	{
-		return $this->role;
 	}
 }

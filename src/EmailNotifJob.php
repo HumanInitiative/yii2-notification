@@ -21,17 +21,23 @@ class EmailNotifJob extends BaseObject implements JobInterface
 	 * @var StatusNotifyInterface
 	 */
 	private $statusNotify;
+	/**
+	 * @var Recipient
+	 */
+	private $sender;
 
 	/**
 	 * Class construct method
 	 * 
 	 * @param MailerInterface $mailer
 	 * @param StatusNotifyInterface $statusNotify
+	 * @param Recipient $sender
 	 */
-	public function __construct(MailerInterface $mailer, StatusNotifyInterface $statusNotify)
+	public function __construct(MailerInterface $mailer, StatusNotifyInterface $statusNotify, Recipient $sender)
 	{
 		$this->mailer = $mailer;
 		$this->statusNotify = $statusNotify;
+		$this->sender = $sender;
 	}
 
 	/**
@@ -45,6 +51,7 @@ class EmailNotifJob extends BaseObject implements JobInterface
 
 		return $this->mailer
 			->compose($viewFile, $params)
+			->setFrom($this->sender->getEmail())
 			->setTo($message->to)
 			->setSubject($message->subject)
 			->setCC($message->cc)

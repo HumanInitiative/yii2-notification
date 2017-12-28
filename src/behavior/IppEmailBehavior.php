@@ -11,6 +11,14 @@ use yii\mail\MailerInterface;
 use yii\queue\Queue;
 
 /**
+ * Behavior for Ipp Model
+ *
+ * Compose mailer first
+ *
+ * ```php
+ * $viewMail = MailerFactory::makeView(Yii::$app->controller, 'footer.php', []);
+ * $mailer = MailerFactory::composeMailer(Yii::$app->mailer, $viewMail, $sender);
+ * ```
  * @author Zein Miftah <zeinmiftah@gmail.com>
  */
 class IppEmailBehavior extends Behavior

@@ -16,13 +16,12 @@ class MailerFactory
 	 * 
 	 * @param MailerInterface $mailer
 	 * @param ViewMail $viewMail
-	 * @param Recipient $sender
 	 * @return MailerInterface
 	 */
-	public static function composeMailer(MailerInterface $mailer, ViewMail $viewMail, Recipient $sender)
+	public static function composeMailer(MailerInterface $mailer, ViewMail $viewMail)
 	{
 		$mailer->setView($viewMail);
-		return $mailer->setFrom($sender->getEmail());
+		return $mailer;
 	}
 
 	/**
