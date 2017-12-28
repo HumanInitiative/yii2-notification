@@ -40,6 +40,23 @@ class IppEvent extends ModelEvent implements ModelEventInterface
 			return "Fee Management";
 		} elseif ($this->name == Event::EVENT_REJECT) {
 			return "DITOLAK oleh Keuangan";
+		} elseif ($this->name == Event::EVENT_COMMENT) {
+			return "Komentar terbaru";
+		}
+	}
+
+	public function getEventFile()
+	{
+		if ($this->name == Event::EVENT_CREATE) {
+			return "ipp-create";
+		} elseif ($this->name == Event::EVENT_APPROVE_KEU) {
+			return "ipp-approve";
+		} elseif ($this->name == Event::EVENT_FEE_MANAGEMENT) {
+			return "ipp-feemgmt";
+		} elseif ($this->name == Event::EVENT_REJECT) {
+			return "ipp-reject";
+		} elseif ($this->name == Event::EVENT_COMMENT) {
+			return "ipp-comment";
 		}
 	}
 }

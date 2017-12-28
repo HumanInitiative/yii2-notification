@@ -7,7 +7,6 @@ use pkpudev\notification\ProgramHelper;
 use pkpudev\notification\recipient\RecipientQuery;
 use pkpudev\notification\recipient\RoleRecipentMapper;
 use pkpudev\notification\transform\IppTransform;
-use yii\db\ActiveRecordInterface;
 use yii\swiftmailer\Message;
 
 /**
@@ -17,15 +16,13 @@ class IppStatusNotify implements StatusNotifyInterface
 {
 	private $transform;
 	private $event;
-	private $viewFile;
 	private $recipientMapper;
 	private $message;
 
-	public function __construct(IppTransform $transform, IppEvent $event, $viewFile)
+	public function __construct(IppTransform $transform, IppEvent $event)
 	{
 		$this->transform = $transform;
 		$this->event = $event;
-		$this->viewFile = $viewFile;
 
 		$model = $transform->getModel();
 		$query = new RecipientQuery('Ipp', $model->company_id, $model->branch_id);
@@ -67,6 +64,6 @@ class IppStatusNotify implements StatusNotifyInterface
 	 */
 	public function getViewFile()
 	{
-		return $this->viewFile;
+		return $this->event->getEventFile();
 	}
 }

@@ -42,6 +42,8 @@ class ProjectTransform implements DataTransformInterface
 		$object->verifikator  = $this->model->verificator ? $this->model->verificator->full_name : "-";
 		$object->location     = $this->model->getLocation();
 		$object->last_file    = $this->model->lastUploadedFile ? $this->model->lastUploadedFile->file : null;
+		$object->year         = date('Y', strtotime($this->model->project_date));
+		$object->is_ramadhan  = $this->model->isRamadhan;
 		// mitra = $model->cpm ? $model->cpm->partner->partner_name : "-",
 		return $object;
 	}

@@ -3,9 +3,11 @@
 namespace pkpudev\notification\notify;
 
 use pkpudev\notification\event\ProjectEvent;
+use pkpudev\notification\ProgramHelper;
+use pkpudev\notification\recipient\RecipientQuery;
+use pkpudev\notification\recipient\RoleRecipentMapper;
 use pkpudev\notification\transform\ProjectTransform;
-use yii\db\ActiveRecordInterface;
-use yii\mail\MessageInterface;
+use yii\swiftmailer\Message;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -14,40 +16,54 @@ class ProjectStatusNotify implements StatusNotifyInterface
 {
 	private $transform;
 	private $event;
-	private $viewFile;
+	private $recipientMapper;
+	private $message;
 
-	public function __construct(ProjectTransform $transform, ProjectEvent $event, $viewFile)
+	public function __construct(ProjectTransform $transform, ProjectEvent $event)
 	{
 		$this->transform = $transform;
 		$this->event = $event;
-		$this->viewFile = $viewFile;
+
+		$model = $transform->getModel();
+		$query = new RecipientQuery('Project', $model->company_id, $model->branch_id);
+		$this->recipientMapper = new RoleRecipentMapper($query, $event);
 	}
 	/**
 	 * @inheritdoc
 	 */
 	public function getMessage()
 	{
-		// return new MailMessage;
+		if ($this->message) {
+			return $this->message;
+		}
+
+		// Compose subject
+		$params = $this->transform->getParams();
+		$subject = sprintf("%s PMP#%s %s %s",
+			ProgramHelper::titlePrefix($params->is_ramadhan, $params->year),
+			$params->no,
+			$params->name,
+			$this->event->eventDesc
+		);
+		// Compose mail
+		$this->message = new Message;
+		$this->message->to = $this->recipientMapper->getToAddress();
+		$this->message->cc = $this->recipientMapper->getCcAddress();
+		$this->message->subject = $subject;
+		return $this->message;
 	}
 	/**
 	 * @inheritdoc
 	 */
-	public function getToAddress(ActiveRecordInterface $model)
+	public function getParams()
 	{
-		return [];
-	}
-	/**
-	 * @inheritdoc
-	 */
-	public function getCcAddress(ActiveRecordInterface $model)
-	{
-		return [];
+		return $this->transform->getParams();
 	}
 	/**
 	 * @return string
 	 */
 	public function getViewFile()
 	{
-		return $this->viewFile;
+		return $this->event->getEventFile();
 	}
 }
