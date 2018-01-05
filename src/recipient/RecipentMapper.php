@@ -22,13 +22,17 @@ class RecipentMapper
 	/**
 	 * Class Constructor
 	 *
+	 * @param DataTransformInterface $transform
 	 * @param RecipientQuery $query
 	 * @param ModelEventInterface $event
 	 */
-	public function __construct(RecipientQuery $query, ModelEventInterface $event)
-	{
-		$this->mapperTo = Mapper::create($query, $event, Mapper::ADDRESSTYPE_TO);
-		$this->mapperCc = Mapper::create($query, $event, Mapper::ADDRESSTYPE_CC);
+	public function __construct(
+		DataTransformInterface $transform,
+		RecipientQuery $query,
+		ModelEventInterface $event
+	) {
+		$this->mapperTo = Mapper::create($transform, $query, $event, Mapper::ADDRESSTYPE_TO);
+		$this->mapperCc = Mapper::create($transform, $query, $event, Mapper::ADDRESSTYPE_CC);
 	}
 
 	public function getToAddress()

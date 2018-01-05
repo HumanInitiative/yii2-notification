@@ -23,8 +23,11 @@ class IppCcAddress implements RecipientAddressInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function __construct(RecipientQuery $query, ModelEventInterface $event)
-	{
+	public function __construct(
+		DataTransformInterface $transform,
+		RecipientQuery $query,
+		ModelEventInterface $event
+	) {
 		$this->query = $query;
 		$this->event = $event;
 	}
@@ -36,25 +39,29 @@ class IppCcAddress implements RecipientAddressInterface
 	{
 		$eventName = $this->event->name;
 		if ($eventName == Event::EVENT_CREATE) {
-			// CREA
-			// MRKT
-			// MGRMRKT
-			// KEU
+			$emails = $query->getByRole(Role::KEU); // KEU
+			$emails[] =	$transform->getCreatorEmail(); // CREA
+			$emails[] =	$transform->getMarketerEmail(); // MRKT
+			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
 		} elseif ($eventName == Event::EVENT_APPROVE_KEU) {
-			// MRKT
-			// MGRMRKT
-			// PDG
-			// QAQC
-			// VERKEU
+			$emails = array_merge(
+				$query->getByRole(Role::PDG), // PDG
+				$query->getByRole(Role::QAQC), // QAQC
+				$query->getByRole(Role::VERKEU) // VERKEU
+			);
+			$emails[] =	$transform->getMarketerEmail(); // MRKT
+			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
 		} elseif ($eventName == Event::EVENT_COMMENT) {
 			/* TODO */
 		} elseif ($eventName == Event::EVENT_FEE_MANAGEMENT) {
-			// CREA
+			$emails =	[$transform->getCreatorEmail()]; // CREA
 		} elseif ($eventName == Event::EVENT_REJECT) {
-			// MGRMRKT
-			// VERKEU
-			// KEU
-			// QAQC
+			$emails = array_merge(
+				$query->getByRole(Role::VERKEU), // VERKEU
+				$query->getByRole(Role::KEU), // KEU
+				$query->getByRole(Role::QAQC) // QAQC
+			);
+			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
 		}
 	}
 }

@@ -28,7 +28,7 @@ class IppStatusNotify implements StatusNotifyInterface
 		$model = $transform->getModel();
 		$modelName = new ModelName('Ipp');
 		$query = new RecipientQuery($modelName, $model->company_id, $model->branch_id);
-		$this->recipientMapper = new RecipentMapper($query, $event);
+		$this->recipientMapper = new RecipentMapper($transform, $query, $event);
 	}
 	/**
 	 * @inheritdoc

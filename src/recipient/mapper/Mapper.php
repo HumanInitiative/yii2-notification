@@ -17,28 +17,33 @@ class Mapper
 	/**
 	 * Create Recipient Address
 	 * 
+	 * @param DataTransformInterface $transform
 	 * @param RecipientQuery $query
 	 * @param ModelEventInterface $event
 	 * @param int $addressType
 	 */
-	public static function create(RecipientQuery $query, ModelEventInterface $event, $addressType)
-	{
+	public static function create(
+		DataTransformInterface $transform,
+		RecipientQuery $query,
+		ModelEventInterface $event,
+		$addressType
+	) {
 		$isModelIpp = $query->modelName->getName() == ModelName::IPP;
 		$isModelProject = $query->modelName->getName() == ModelName::PROJECT;
 
 		if ($addressType == static::ADDRESSTYPE_TO) {
 			if ($isModelIpp) {
-				return new IppToAddress($query, $event);
+				return new IppToAddress($transform, $query, $event);
 			} elseif ($isModelProject) {
-				return new ProjectToAddress($query, $event);
+				return new ProjectToAddress($transform, $query, $event);
 			} else {
 				throw new yii\base\InvalidConfigException("Invalid modelName for RecipientAddress to");
 			}
 		} elseif ($addressType == static::ADDRESSTYPE_CC) {
 			if ($isModelIpp) {
-				return new IppCcAddress($query, $event);
+				return new IppCcAddress($transform, $query, $event);
 			} elseif ($isModelProject) {
-				return new ProjectCcAddress($query, $event);
+				return new ProjectCcAddress($transform, $query, $event);
 			} else {
 				throw new yii\base\InvalidConfigException("Invalid modelName for RecipientAddress cc");
 			}
