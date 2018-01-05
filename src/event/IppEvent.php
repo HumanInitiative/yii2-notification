@@ -13,11 +13,17 @@ class IppEvent extends ModelEvent implements ModelEventInterface
 {
 	private $id;
 	private $status_id;
+	private $company_id;
+	private $fund_driven_id;
+	private $from_izi;
 
 	public function __construct(ActiveRecordInterface $ipp)
 	{
 		$this->id = $ipp->id;
 		$this->status_id = $ipp->status_id;
+		$this->company_id = $ipp->company_id;
+		$this->fund_driven_id = $ipp->fund_driven_id;
+		$this->from_izi = $ipp->from_izi;
 	}
 
 	public function getId()
@@ -28,6 +34,22 @@ class IppEvent extends ModelEvent implements ModelEventInterface
 	public function getStatusId()
 	{
 		return $this->status_id;
+	}
+
+	public function getIsFromIzi()
+	{
+		return (
+			$this->from_izi == 1 || 
+			(
+				$this->company_id == 2 && /* IZI */
+			 	$this->fund_driven_id == 2 /* RKAT */
+			)
+		);
+	}
+
+	public function getCompanyId()
+	{
+		return $this->company_id;
 	}
 
 	public function getEventDesc()

@@ -4,8 +4,9 @@ namespace pkpudev\notification\notify;
 
 use pkpudev\notification\event\IppEvent;
 use pkpudev\notification\ProgramHelper;
+use pkpudev\notification\recipient\ModelName;
 use pkpudev\notification\recipient\RecipientQuery;
-use pkpudev\notification\recipient\RoleRecipentMapper;
+use pkpudev\notification\recipient\RecipentMapper;
 use pkpudev\notification\transform\IppTransform;
 use yii\swiftmailer\Message;
 
@@ -25,8 +26,9 @@ class IppStatusNotify implements StatusNotifyInterface
 		$this->event = $event;
 
 		$model = $transform->getModel();
-		$query = new RecipientQuery('Ipp', $model->company_id, $model->branch_id);
-		$this->recipientMapper = new RoleRecipentMapper($query, $event);
+		$modelName = new ModelName('Ipp');
+		$query = new RecipientQuery($modelName, $model->company_id, $model->branch_id);
+		$this->recipientMapper = new RecipentMapper($query, $event);
 	}
 	/**
 	 * @inheritdoc

@@ -10,11 +10,10 @@ use yii\db\Query;
  */
 class RecipientQuery extends BaseObject
 {
-	const MODEL_ALL = 'All';
-	const MODEL_IPP = 'Ipp';
-	const MODEL_PROJECT = 'Project';
-	const MODEL_PROPOSAL = 'Proposal';
-
+	/**
+	 * @var ModelName $modelName
+	 */
+	public $modelName;
 	/**
 	 * @var int $companyId
 	 */
@@ -36,12 +35,13 @@ class RecipientQuery extends BaseObject
 	/**
 	 * Class constructor
 	 * 
-	 * @param string $model
+	 * @param ModelName $modelName
 	 * @param int $companyId
 	 * @param int $branchId
 	 */
-	public function __construct($model, $companyId, $branchId=null)
+	public function __construct(ModelName $modelName, $companyId, $branchId=null)
 	{
+		$this->modelName = $modelName;
 		$this->branchId = $branchId;
 		$this->companyId = $companyId;
 
@@ -54,9 +54,9 @@ class RecipientQuery extends BaseObject
 		if (is_numeric($branchId)) {
 			$query
 				->andWhere(['branch_id'=>$branchId])
-				->andWhere(['model'=>self::MODEL_ALL]);
+				->andWhere(['model'=>ModelName::ALL]);
 		} else {
-			$query->andWhere(['model'=>$model]);
+			$query->andWhere(['model'=>$model->getName()]);
 		}
 
 		$this->recipients = array_map(function($row) {

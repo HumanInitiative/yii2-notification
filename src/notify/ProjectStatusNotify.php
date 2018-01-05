@@ -4,8 +4,9 @@ namespace pkpudev\notification\notify;
 
 use pkpudev\notification\event\ProjectEvent;
 use pkpudev\notification\ProgramHelper;
+use pkpudev\notification\recipient\ModelName;
 use pkpudev\notification\recipient\RecipientQuery;
-use pkpudev\notification\recipient\RoleRecipentMapper;
+use pkpudev\notification\recipient\RecipentMapper;
 use pkpudev\notification\transform\ProjectTransform;
 use yii\swiftmailer\Message;
 
@@ -25,8 +26,9 @@ class ProjectStatusNotify implements StatusNotifyInterface
 		$this->event = $event;
 
 		$model = $transform->getModel();
-		$query = new RecipientQuery('Project', $model->company_id, $model->branch_id);
-		$this->recipientMapper = new RoleRecipentMapper($query, $event);
+		$modelName = new ModelName('Project');
+		$query = new RecipientQuery($modelName, $model->company_id, $model->branch_id);
+		$this->recipientMapper = new RecipentMapper($query, $event);
 	}
 	/**
 	 * @inheritdoc
