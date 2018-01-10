@@ -25,4 +25,8 @@ interface ProjectActionEvent
 	// ProjectFile
 	const EVENT_UPLOAD_FILE = 'upload_file';
 	const EVENT_DELETE_FILE = 'delete_file';
+	// ProjectReport
+	const EVENT_UPLOAD_REPORT = 'upload_report';
+	// Alert
+	const EVENT_ALERT_EXECDATE = 'alert_execdate';
 }

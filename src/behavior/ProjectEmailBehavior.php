@@ -52,6 +52,10 @@ class ProjectEmailBehavior extends Behavior
 			// ProjectFile
 			Event::EVENT_UPLOAD_FILE => 'onEvent',
 			Event::EVENT_DELETE_FILE => 'onEvent',
+			// ProjectReport
+			Event::EVENT_UPLOAD_REPORT => 'onEvent',
+			// Alert
+			Event::EVENT_ALERT_EXECDATE => 'onEvent',
 		];
 	}
 

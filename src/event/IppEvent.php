@@ -2,9 +2,9 @@
 
 namespace pkpudev\notification\event;
 
+use IppActionEvent as Event;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecordInterface;
-use IppActionEvent as Event;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>

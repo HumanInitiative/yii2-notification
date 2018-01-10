@@ -5,6 +5,7 @@ namespace pkpudev\notification\recipient\mapper;
 use pkpudev\notification\event\IppActionEvent as Event;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\RecipientQuery;
+use pkpudev\notification\recipient\Role;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -38,6 +39,8 @@ class IppCcAddress implements RecipientAddressInterface
 	public function getAll()
 	{
 		$eventName = $this->event->name;
+		$emails = null;
+
 		if ($eventName == Event::EVENT_CREATE) {
 			$emails = $query->getByRole(Role::KEU); // KEU
 			$emails[] =	$transform->getCreatorEmail(); // CREA
@@ -63,5 +66,7 @@ class IppCcAddress implements RecipientAddressInterface
 			);
 			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
 		}
+
+		return $emails;
 	}
 }

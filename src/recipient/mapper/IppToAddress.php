@@ -13,6 +13,10 @@ use pkpudev\notification\recipient\Role;
 class IppToAddress implements RecipientAddressInterface
 {
 	/**
+	 * @var DataTransformInterface $query
+	 */
+	private $transform;
+	/**
 	 * @var RecipientQuery $query
 	 */
 	private $query;
@@ -33,6 +37,7 @@ class IppToAddress implements RecipientAddressInterface
 		RecipientQuery $query,
 		ModelEventInterface $event
 	) {
+		$this->transform = $transform;
 		$this->query = $query;
 		$this->event = $event;
 	}
@@ -46,38 +51,39 @@ class IppToAddress implements RecipientAddressInterface
 		$eventIsFromIzi = $this->event->isFromIzi;
 		$branchId = $this->query->branchId;
 		$companyId = $this->query->companyId;
+		$emails = null;
 
 		if ($eventName == Event::EVENT_CREATE) {
 			if ($branchId == $this->pusat) {
-				$emails = $query->getByRole(Role::VERKEU); // VERKEU
+				$emails = $this->query->getByRole(Role::VERKEU); // VERKEU
 				if ($eventIsFromIzi) {
-					$emails[] = $transform->getPicEmail(); // PIC
-					$emails[] = $transform->getCreatorEmail(); // CREA
+					$emails[] = $this->transform->getPicEmail(); // PIC
+					$emails[] = $this->transform->getCreatorEmail(); // CREA
 				} else {
-					$emails[] = $query->getByRole(Role::QAQC); // QAQC
+					$emails[] = $this->query->getByRole(Role::QAQC); // QAQC
 				}
 			} else {
 				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
 				if ($companyId) {
-					$emails[] = $query->getByRole(Role::QAQC); // QAQC
+					$emails[] = $this->query->getByRole(Role::QAQC); // QAQC
 				}
 			}
 		} elseif ($eventName == Event::EVENT_APPROVE_KEU) {
 			if ($branchId == $this->pusat) {
 				// PIC
-				$emails = [$transform->getPicEmail()]; // PIC
+				$emails = [$this->transform->getPicEmail()]; // PIC
 			} else {
 				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
 			}
 		} elseif ($eventName == Event::EVENT_COMMENT) {
 			/* TODO */
 		} elseif ($eventName == Event::EVENT_FEE_MANAGEMENT) {
-			$emails = [$query->getByRole(Role::QAQC)]; // QAQC
+			$emails = [$this->query->getByRole(Role::QAQC)]; // QAQC
 		} elseif ($eventName == Event::EVENT_REJECT) {
 			if ($branchId == $this->pusat) {
 				$emails = [
-					$transform->getCreatorEmail(), // CREA
-					$transform->getMarketerEmail(), // MRKT
+					$this->transform->getCreatorEmail(), // CREA
+					$this->transform->getMarketerEmail(), // MRKT
 				];
 			} else {
 				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
