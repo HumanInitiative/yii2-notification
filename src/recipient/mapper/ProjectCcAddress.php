@@ -13,6 +13,10 @@ use pkpudev\notification\recipient\Role;
 class ProjectCcAddress implements RecipientAddressInterface
 {
 	/**
+	 * @var DataTransformInterface $query
+	 */
+	private $transform;
+	/**
 	 * @var RecipientQuery $query
 	 */
 	private $query;
@@ -33,6 +37,7 @@ class ProjectCcAddress implements RecipientAddressInterface
 		RecipientQuery $query,
 		ModelEventInterface $event
 	) {
+		$this->transform = $transform;
 		$this->query = $query;
 		$this->event = $event;
 	}
