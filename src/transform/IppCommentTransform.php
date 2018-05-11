@@ -32,7 +32,7 @@ class IppCommentTransform implements DataTransformInterface
 	 */
 	public function getParams()
 	{
-		return new stdClass;
+		return new \stdClass;
 	}
 	/**
 	 * @inheritdoc

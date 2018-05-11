@@ -6,6 +6,7 @@ use pkpudev\notification\event\IppActionEvent as Event;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\RecipientQuery;
 use pkpudev\notification\recipient\Role;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -47,29 +48,29 @@ class IppCcAddress implements RecipientAddressInterface
 		$emails = null;
 
 		if ($eventName == Event::EVENT_CREATE) {
-			$emails = $query->getByRole(Role::KEU); // KEU
-			$emails[] =	$transform->getCreatorEmail(); // CREA
-			$emails[] =	$transform->getMarketerEmail(); // MRKT
-			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
+			$emails = $this->query->getByRole(Role::KEU); // KEU
+			$emails[] =	$this->transform->getCreatorEmail(); // CREA
+			$emails[] =	$this->transform->getMarketerEmail(); // MRKT
+			$emails[] =	$this->transform->getManagerMarketerEmail(); // MGRMRKT
 		} elseif ($eventName == Event::EVENT_APPROVE_KEU) {
 			$emails = array_merge(
-				$query->getByRole(Role::PDG), // PDG
-				$query->getByRole(Role::QAQC), // QAQC
-				$query->getByRole(Role::VERKEU) // VERKEU
+				$this->query->getByRole(Role::PDG), // PDG
+				$this->query->getByRole(Role::QAQC), // QAQC
+				$this->query->getByRole(Role::VERKEU) // VERKEU
 			);
-			$emails[] =	$transform->getMarketerEmail(); // MRKT
-			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
+			$emails[] =	$this->transform->getMarketerEmail(); // MRKT
+			$emails[] =	$this->transform->getManagerMarketerEmail(); // MGRMRKT
 		} elseif ($eventName == Event::EVENT_COMMENT) {
 			/* TODO */
 		} elseif ($eventName == Event::EVENT_FEE_MANAGEMENT) {
-			$emails =	[$transform->getCreatorEmail()]; // CREA
+			$emails =	[$this->transform->getCreatorEmail()]; // CREA
 		} elseif ($eventName == Event::EVENT_REJECT) {
 			$emails = array_merge(
-				$query->getByRole(Role::VERKEU), // VERKEU
-				$query->getByRole(Role::KEU), // KEU
-				$query->getByRole(Role::QAQC) // QAQC
+				$this->query->getByRole(Role::VERKEU), // VERKEU
+				$this->query->getByRole(Role::KEU), // KEU
+				$this->query->getByRole(Role::QAQC) // QAQC
 			);
-			$emails[] =	$transform->getManagerMarketerEmail(); // MGRMRKT
+			$emails[] =	$this->transform->getManagerMarketerEmail(); // MGRMRKT
 		}
 
 		return $emails;

@@ -64,7 +64,8 @@ class IppEmailBehavior extends Behavior
 	{
 		$transform = new IppTransform($this->owner);
 		$statusNotify = new IppStatusNotify($transform, $event);
-		$job = new EmailNotifJob($this->mailer, $statusNotify);
+		$sender = new Recipient; //TODO
+		$job = new EmailNotifJob($this->mailer, $statusNotify, $sender);
 		$this->mailQueue->push($job);
 	}
 }

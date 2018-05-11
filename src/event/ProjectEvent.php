@@ -16,12 +16,13 @@ class ProjectEvent extends ModelEvent implements ModelEventInterface
 	private $execdate_start;
 	private $is_ramadhan;
 
-	public function __construct(ActiveRecordInterface $project)
+	public function __construct(ActiveRecordInterface $model, $eventName)
 	{
-		$this->id = $project->id;
-		$this->status_id = $project->status_id;
-		$this->execdate_start = date("d-m-Y", strtotime($project->realize_date_start));
-		$this->is_ramadhan = $project->getIsRamadhan();
+		$this->id = $model->id;
+		$this->name = $eventName;
+		$this->status_id = $model->status_id;
+		$this->execdate_start = date("d-m-Y", strtotime($model->realize_date_start));
+		$this->is_ramadhan = $model->getIsRamadhan();
 	}
 
 	public function getId()

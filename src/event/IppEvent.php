@@ -2,7 +2,6 @@
 
 namespace pkpudev\notification\event;
 
-use IppActionEvent as Event;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecordInterface;
 
@@ -17,13 +16,14 @@ class IppEvent extends ModelEvent implements ModelEventInterface
 	private $fund_driven_id;
 	private $from_izi;
 
-	public function __construct(ActiveRecordInterface $ipp)
+	public function __construct(ActiveRecordInterface $model, $eventName)
 	{
-		$this->id = $ipp->id;
-		$this->status_id = $ipp->status_id;
-		$this->company_id = $ipp->company_id;
-		$this->fund_driven_id = $ipp->fund_driven_id;
-		$this->from_izi = $ipp->from_izi;
+		$this->id = $model->id;
+		$this->name = $eventName;
+		$this->status_id = $model->status_id;
+		$this->company_id = $model->company_id;
+		$this->fund_driven_id = $model->fund_driven_id;
+		$this->from_izi = $model->from_izi;
 	}
 
 	public function getId()
@@ -54,30 +54,30 @@ class IppEvent extends ModelEvent implements ModelEventInterface
 
 	public function getEventDesc()
 	{
-		if ($this->name == Event::EVENT_CREATE) {
+		if ($this->name == IppActionEvent::EVENT_CREATE) {
 			return "telah dibuat";
-		} elseif ($this->name == Event::EVENT_APPROVE_KEU) {
+		} elseif ($this->name == IppActionEvent::EVENT_APPROVE_KEU) {
 			return "di-APPROVE Keuangan";
-		} elseif ($this->name == Event::EVENT_FEE_MANAGEMENT) {
+		} elseif ($this->name == IppActionEvent::EVENT_FEE_MANAGEMENT) {
 			return "Fee Management";
-		} elseif ($this->name == Event::EVENT_REJECT) {
+		} elseif ($this->name == IppActionEvent::EVENT_REJECT) {
 			return "DITOLAK oleh Keuangan";
-		} elseif ($this->name == Event::EVENT_COMMENT) {
+		} elseif ($this->name == IppActionEvent::EVENT_COMMENT) {
 			return "Komentar terbaru";
 		}
 	}
 
 	public function getEventFile()
 	{
-		if ($this->name == Event::EVENT_CREATE) {
+		if ($this->name == IppActionEvent::EVENT_CREATE) {
 			return "ipp-create";
-		} elseif ($this->name == Event::EVENT_APPROVE_KEU) {
+		} elseif ($this->name == IppActionEvent::EVENT_APPROVE_KEU) {
 			return "ipp-approve";
-		} elseif ($this->name == Event::EVENT_FEE_MANAGEMENT) {
+		} elseif ($this->name == IppActionEvent::EVENT_FEE_MANAGEMENT) {
 			return "ipp-feemgmt";
-		} elseif ($this->name == Event::EVENT_REJECT) {
+		} elseif ($this->name == IppActionEvent::EVENT_REJECT) {
 			return "ipp-reject";
-		} elseif ($this->name == Event::EVENT_COMMENT) {
+		} elseif ($this->name == IppActionEvent::EVENT_COMMENT) {
 			return "ipp-comment";
 		}
 	}

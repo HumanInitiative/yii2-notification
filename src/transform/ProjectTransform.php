@@ -30,7 +30,7 @@ class ProjectTransform implements DataTransformInterface
 	 */
 	public function getParams()
 	{
-		$object = new stdClass;
+		$object = new \stdClass;
 		$object->id           = $this->model->id;
 		$object->no           = $this->model->project_no;
 		$object->name         = $this->model->project_name;

@@ -5,6 +5,7 @@ namespace pkpudev\notification\recipient\mapper;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\ModelName;
 use pkpudev\notification\recipient\RecipientQuery;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>

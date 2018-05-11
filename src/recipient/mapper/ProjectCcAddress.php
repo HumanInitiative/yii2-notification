@@ -6,6 +6,7 @@ use pkpudev\notification\event\ProjectActionEvent as Event;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\RecipientQuery;
 use pkpudev\notification\recipient\Role;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -49,7 +50,7 @@ class ProjectCcAddress implements RecipientAddressInterface
 	{
 		$eventName = $this->event->name;
 		$eventIsRamadhan = $this->event->getIsRamadhan();
-		$emails = null;
+		$emails = [];
 
 		if ($eventName == Event::EVENT_CREATE) {
 			// If Ramadhan Then RMD
@@ -69,27 +70,27 @@ class ProjectCcAddress implements RecipientAddressInterface
 			$emails = array_merge(
 				$this->query->getByRole(Role::PDG), // PDG
 				$this->query->getByRole(Role::QAQC), // QAQC
-				$this->query->getByRole(Role::KEU), // KEU
+				$this->query->getByRole(Role::KEU) // KEU
 			);
 			$emails[] = $this->transform->getMarketerEmail(); // MRKT
 		} elseif ($eventName == Event::EVENT_FINISHING) {
 			$emails = array_merge(
 				$this->query->getByRole(Role::PDG), // PDG
 				$this->query->getByRole(Role::QAQC), // QAQC
-				$this->query->getByRole(Role::KEU), // KEU
+				$this->query->getByRole(Role::KEU) // KEU
 			);
 			$emails[] = $this->transform->getMarketerEmail(); // MRKT
 		} elseif ($eventName == Event::EVENT_VERIFYFINISH) {
 			$emails = array_merge(
 				$this->query->getByRole(Role::PDG), // PDG
-				$this->query->getByRole(Role::QAQC), // QAQC
+				$this->query->getByRole(Role::QAQC) // QAQC
 			);
 			$emails[] = $this->transform->getMarketerEmail(); // MRKT
 		} elseif ($eventName == Event::EVENT_ALERT_EXECDATE) {
 			$emails = array_merge(
 				$this->query->getByRole(Role::PDG), // PDG
 				$this->query->getByRole(Role::QAQC), // QAQC
-				$this->query->getByRole(Role::KEU), // KEU
+				$this->query->getByRole(Role::KEU) // KEU
 			);
 			$emails[] = $this->transform->getMarketerEmail(); // MRKT
 		} elseif ($eventName == Event::EVENT_UPLOAD_REPORT) {

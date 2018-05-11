@@ -6,6 +6,7 @@ use pkpudev\notification\event\IppActionEvent as Event;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\RecipientQuery;
 use pkpudev\notification\recipient\Role;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -47,11 +48,17 @@ class IppToAddress implements RecipientAddressInterface
 	 */
 	public function getAll()
 	{
-		$eventName = $this->event->name;
-		$eventIsFromIzi = $this->event->isFromIzi;
 		$branchId = $this->query->branchId;
 		$companyId = $this->query->companyId;
-		$emails = null;
+		$eventIsFromIzi = $this->event->isFromIzi;
+		$eventName = $this->event->name;
+		$modelName = $this->query->modelName;
+		$emails = [];
+
+		$fnGetAllFromBranch = function() use ($modelName, $companyId, $branchId) {
+			$query = RecipientQuery::fromBranch($modelName, $companyId, $branchId);
+			return $query->getAll();
+		};
 
 		if ($eventName == Event::EVENT_CREATE) {
 			if ($branchId == $this->pusat) {
@@ -60,12 +67,15 @@ class IppToAddress implements RecipientAddressInterface
 					$emails[] = $this->transform->getPicEmail(); // PIC
 					$emails[] = $this->transform->getCreatorEmail(); // CREA
 				} else {
-					$emails[] = $this->query->getByRole(Role::QAQC); // QAQC
+					// $emails[] = $this->query->getByRole(Role::QAQC);
+					$emails = array_merge($emails,
+						$this->query->getByRole(Role::QAQC)); // QAQC
 				}
 			} else {
-				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
+				$emails = $fnGetAllFromBranch(); // Branch
 				if ($companyId) {
-					$emails[] = $this->query->getByRole(Role::QAQC); // QAQC
+					$emails = array_merge($emails,
+						$this->query->getByRole(Role::QAQC)); // QAQC
 				}
 			}
 		} elseif ($eventName == Event::EVENT_APPROVE_KEU) {
@@ -73,12 +83,12 @@ class IppToAddress implements RecipientAddressInterface
 				// PIC
 				$emails = [$this->transform->getPicEmail()]; // PIC
 			} else {
-				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
+				$emails = $fnGetAllFromBranch(); // Branch
 			}
 		} elseif ($eventName == Event::EVENT_COMMENT) {
 			/* TODO */
 		} elseif ($eventName == Event::EVENT_FEE_MANAGEMENT) {
-			$emails = [$this->query->getByRole(Role::QAQC)]; // QAQC
+			$emails = $this->query->getByRole(Role::QAQC); // QAQC
 		} elseif ($eventName == Event::EVENT_REJECT) {
 			if ($branchId == $this->pusat) {
 				$emails = [
@@ -86,7 +96,7 @@ class IppToAddress implements RecipientAddressInterface
 					$this->transform->getMarketerEmail(), // MRKT
 				];
 			} else {
-				$emails = RecipientQuery::fromBranch($companyId, $branchId); // Branch
+				$emails = $fnGetAllFromBranch(); // Branch
 			}
 		}
 

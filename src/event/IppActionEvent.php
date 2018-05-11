@@ -5,7 +5,7 @@ namespace pkpudev\notification\event;
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
  */
-interface IppActionEvent
+interface IppActionEvent extends ActionEvent
 {
 	// Ipp
 	const EVENT_CREATE = 'create';

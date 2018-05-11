@@ -39,7 +39,7 @@ class IppTransform implements DataTransformInterface
 			return $this->params;
 		}
 
-		$object = new stdClass;
+		$object = new \stdClass;
 		$object->id          = $this->model->id;
 		$object->title       = $this->model->program_name;
 		$object->no          = $this->model->ipp_no;

@@ -59,7 +59,7 @@ trait AccessorTrait
 	public function getManagerMarketerEmail()
 	{
 		if ($this->marketer && ($manager = $this->marketer->manager)) {
-			return Factory::fromEmployee($this->manager);
+			return Factory::fromEmployee($manager);
 		}
 	}
 }

@@ -10,13 +10,14 @@ use yii\base\BaseObject;
 class Role extends BaseObject
 {
 	const BKS = 'BKS';
-	const KEU = 'Keuangan';
+	const KEU = 'Keu';
 	const KMT = 'Kemitraan';
 	const PDG = 'PDG';
 	const QAQC = 'QAQC';
 	const RMD = 'Ramadhan';
 	const VER = 'Verifikator';
 	const VERKEU = 'VerifikatorKeu';
+	const EXEC = 'Eksekutor';
 	// const CREA = 'Creator';
 	// const MGRMRKT = 'ManagerMarketer';
 	// const MRKT = 'Marketer';

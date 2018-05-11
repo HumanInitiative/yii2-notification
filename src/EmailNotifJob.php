@@ -3,6 +3,7 @@
 namespace pkpudev\notification;
 
 use pkpudev\notification\notify\StatusNotifyInterface;
+use pkpudev\notification\recipient\Recipient;
 use yii\base\BaseObject;
 use yii\mail\MailerInterface;
 use yii\mail\MessageInterface;

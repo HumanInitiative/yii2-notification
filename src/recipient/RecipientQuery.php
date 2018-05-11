@@ -10,6 +10,8 @@ use yii\db\Query;
  */
 class RecipientQuery extends BaseObject
 {
+	const BRANCH_PUSAT = 1;
+
 	/**
 	 * @var ModelName $modelName
 	 */
@@ -46,26 +48,26 @@ class RecipientQuery extends BaseObject
 		$this->companyId = $companyId;
 
 		$query = (new Query)
-			->select('company_id, role, user_email, user_name')
+			->select('company_id, role, user_id, user_email, user_name')
 			->from($this->tableName)
 			->where(['is_active'=>1])
 			->andWhere(['in', 'company_id', [0, $companyId]]);
 
-		if (is_numeric($branchId)) {
+		if (is_numeric($branchId) && $branchId != self::BRANCH_PUSAT) {
 			$query
 				->andWhere(['branch_id'=>$branchId])
 				->andWhere(['model'=>ModelName::ALL]);
 		} else {
-			$query->andWhere(['model'=>$model->getName()]);
+			$query->andWhere(['model'=>$modelName->getName()]);
 		}
 
 		$this->recipients = array_map(function($row) {
 			return new Recipient([
-				'company_id'=>$row['company_id'],
+				'companyId'=>$row['company_id'],
 				'role'=>$row['role'],
-				'user_id'=>$row['user_id'],
-				'user_email'=>$row['user_email'],
-				'user_name'=>$row['user_name'],
+				'userId'=>$row['user_id'],
+				'userEmail'=>$row['user_email'],
+				'userName'=>$row['user_name'],
 			]);
 		}, $query->all());
 	}
@@ -95,8 +97,8 @@ class RecipientQuery extends BaseObject
 	 * @param int $branchId
 	 * @return RecipientQuery
 	 */
-	public static function fromBranch($companyId, $branchId)
+	public static function fromBranch($modelName, $companyId, $branchId)
 	{
-		return new static(null, $companyId, $branchId);
+		return new static($modelName, $companyId, $branchId);
 	}
 }

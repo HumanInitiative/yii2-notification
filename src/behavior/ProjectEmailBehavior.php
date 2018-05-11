@@ -66,7 +66,8 @@ class ProjectEmailBehavior extends Behavior
 	{
 		$transform = new ProjectTransform($this->owner);
 		$statusNotify = new ProjectStatusNotify($transform, $event);
-		$job = new EmailNotifJob($this->mailer, $statusNotify);
+		$sender = new Recipient; //TODO
+		$job = new EmailNotifJob($this->mailer, $statusNotify, $sender);
 		$this->mailQueue->push($job);
 	}
 }

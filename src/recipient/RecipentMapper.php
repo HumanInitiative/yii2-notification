@@ -4,6 +4,7 @@ namespace pkpudev\notification\recipient;
 
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\mapper\Mapper;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
@@ -37,11 +38,15 @@ class RecipentMapper
 
 	public function getToAddress()
 	{
-		return $this->mapperTo->getAll();
+		return array_map(function($rec) {
+			return $rec->userEmail; // Format '"%s" <%s>'
+		}, $this->mapperTo->getAll());
 	}
 
 	public function getCcAddress()
 	{
-		return $this->mapperCc->getAll();
+		return array_map(function($rec) {
+			return $rec->userEmail; // Format '"%s" <%s>'
+		}, $this->mapperCc->getAll());
 	}
 }

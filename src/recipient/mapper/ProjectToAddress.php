@@ -6,6 +6,7 @@ use pkpudev\notification\event\ProjectActionEvent as Event;
 use pkpudev\notification\event\ModelEventInterface;
 use pkpudev\notification\recipient\RecipientQuery;
 use pkpudev\notification\recipient\Role;
+use pkpudev\notification\transform\DataTransformInterface;
 
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
