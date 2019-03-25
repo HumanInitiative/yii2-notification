@@ -2,7 +2,6 @@
 
 namespace pkpudev\notification\event;
 
-use ProjectActionEvent as Event;
 use yii\base\ModelEvent;
 use yii\db\ActiveRecordInterface;
 
@@ -11,78 +10,83 @@ use yii\db\ActiveRecordInterface;
  */
 class ProjectEvent extends ModelEvent implements ModelEventInterface
 {
-	private $id;
-	private $status_id;
-	private $execdate_start;
-	private $is_ramadhan;
+    private $id;
+    private $status_id;
+    private $execdate_start;
+    private $is_ramadhan;
 
-	public function __construct(ActiveRecordInterface $model, $eventName)
-	{
-		$this->id = $model->id;
-		$this->name = $eventName;
-		$this->status_id = $model->status_id;
-		$this->execdate_start = date("d-m-Y", strtotime($model->realize_date_start));
-		$this->is_ramadhan = $model->getIsRamadhan();
-	}
+    public function __construct(ActiveRecordInterface $model, $eventName)
+    {
+        $this->id = $model->id;
+        $this->name = $eventName;
+        $this->status_id = $model->status_id;
+        $this->execdate_start = date("d-m-Y", strtotime($model->realize_date_start));
+        $this->is_ramadhan = $model->getIsRamadhan();
+    }
 
-	public function getId()
-	{
-		return $this->id;
-	}
+    public function getId()
+    {
+        return $this->id;
+    }
+    
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	public function getStatusId()
-	{
-		return $this->status_id;
-	}
+    public function getStatusId()
+    {
+        return $this->status_id;
+    }
 
-	public function getIsRamadhan()
-	{
-		return $this->is_ramadhan;
-	}
+    public function getIsRamadhan()
+    {
+        return $this->is_ramadhan;
+    }
 
-	public function getEventDesc()
-	{
-		if ($this->name == Event::EVENT_CREATE) {
-			return "telah dibuat";
-		} elseif ($this->name == Event::EVENT_VERIFY_QC) {
-			return "telah diverifikasi";
-		} elseif ($this->name == Event::EVENT_VERIFY_RMD) {
-			return "telah diverifikasi";
-		} elseif ($this->name == Event::EVENT_COMMENT) {
-			return "Komentar terbaru";
-		} elseif ($this->name == Event::EVENT_RUNNING) {
-			return "telah berjalan";
-		} elseif ($this->name == Event::EVENT_FINISHING) {
-			return "telah selesai";
-		} elseif ($this->name == Event::EVENT_VERIFYFINISH) {
-			return "telah diverifikasi dan dinyatakan Finish";
-		} elseif ($this->name == Event::EVENT_ALERT_EXECDATE) {
-			return "akan dieksekusi tanggal {$this->execdate_start}";
-		} elseif ($this->name == Event::EVENT_UPLOAD_REPORT) {
-			return " - Laporan telah diupload";
-		}
-	}
+    public function getEventDesc()
+    {
+        if ($this->name == ProjectActionEvent::EVENT_CREATE) {
+            return "telah dibuat";
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFY_QC) {
+            return "telah diverifikasi";
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFY_RMD) {
+            return "telah diverifikasi";
+        } elseif ($this->name == ProjectActionEvent::EVENT_COMMENT) {
+            return "Komentar terbaru";
+        } elseif ($this->name == ProjectActionEvent::EVENT_RUNNING) {
+            return "telah berjalan";
+        } elseif ($this->name == ProjectActionEvent::EVENT_FINISHING) {
+            return "telah selesai";
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFYFINISH) {
+            return "telah diverifikasi dan dinyatakan Finish";
+        } elseif ($this->name == ProjectActionEvent::EVENT_ALERT_EXECDATE) {
+            return "akan dieksekusi tanggal {$this->execdate_start}";
+        } elseif ($this->name == ProjectActionEvent::EVENT_UPLOAD_REPORT) {
+            return " - Laporan telah diupload";
+        }
+    }
 
-	public function getEventFile()
-	{
-		if ($this->name == Event::EVENT_CREATE) {
-			return "project-create";
-		} elseif ($this->name == Event::EVENT_VERIFY_QC) {
-			return "project-verify-qaqc";
-		} elseif ($this->name == Event::EVENT_VERIFY_RMD) {
-			return "project-verify-ramadhan";
-		} elseif ($this->name == Event::EVENT_COMMENT) {
-			return "project-comment";
-		} elseif ($this->name == Event::EVENT_RUNNING) {
-			return "project-running";
-		} elseif ($this->name == Event::EVENT_FINISHING) {
-			return "project-finishing";
-		} elseif ($this->name == Event::EVENT_VERIFYFINISH) {
-			return "project-verify-finish";
-		} elseif ($this->name == Event::EVENT_ALERT_EXECDATE) {
-			return "project-alert-execdate";
-		} elseif ($this->name == Event::EVENT_UPLOAD_REPORT) {
-			return "project-report-upload";
-		}
-	}
+    public function getEventFile()
+    {
+        if ($this->name == Event::EVENT_CREATE) {
+            return "project-create";
+        } elseif ($this->name == Event::EVENT_VERIFY_QC) {
+            return "project-verify-qaqc";
+        } elseif ($this->name == Event::EVENT_VERIFY_RMD) {
+            return "project-verify-ramadhan";
+        } elseif ($this->name == Event::EVENT_COMMENT) {
+            return "project-comment";
+        } elseif ($this->name == Event::EVENT_RUNNING) {
+            return "project-running";
+        } elseif ($this->name == Event::EVENT_FINISHING) {
+            return "project-finishing";
+        } elseif ($this->name == Event::EVENT_VERIFYFINISH) {
+            return "project-verify-finish";
+        } elseif ($this->name == Event::EVENT_ALERT_EXECDATE) {
+            return "project-alert-execdate";
+        } elseif ($this->name == Event::EVENT_UPLOAD_REPORT) {
+            return "project-report-upload";
+        }
+    }
 }

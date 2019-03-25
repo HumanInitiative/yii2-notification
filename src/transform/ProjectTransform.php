@@ -14,7 +14,7 @@ class ProjectTransform implements DataTransformInterface
 	/**
 	 * @var Project
 	 */
-	private $model;
+	public $model;
 
 	/**
 	 * @inheritdoc

@@ -30,7 +30,7 @@ class Mapper
 		$addressType
 	) {
 		$isModelIpp = $query->modelName->getName() == ModelName::IPP;
-		$isModelProject = $query->modelName->getName() == ModelName::PROJECT;
+        $isModelProject = $query->modelName->getName() == ModelName::PROJECT;
 
 		if ($addressType == static::ADDRESSTYPE_TO) {
 			if ($isModelIpp) {

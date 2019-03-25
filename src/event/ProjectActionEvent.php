@@ -5,7 +5,7 @@ namespace pkpudev\notification\event;
 /**
  * @author Zein Miftah <zeinmiftah@gmail.com>
  */
-interface ProjectActionEvent extends ActionEvent
+class ProjectActionEvent implements ActionEvent
 {
 	// Project
 	const EVENT_DRAFT = 'draft';
