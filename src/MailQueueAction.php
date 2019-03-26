@@ -5,6 +5,7 @@ namespace pkpudev\notification;
 use app\models\Company;
 use app\models\EmailQueue;
 use app\models\Ipp;
+use app\models\File;
 use app\models\Project;
 use pkpudev\notification\notify\IppStatusNotify;
 use pkpudev\notification\notify\ProjectStatusNotify;
@@ -63,7 +64,7 @@ class MailQueueAction extends Action
 
     public function run()
     {
-        $mapClasses = [/*self::MAPCLASS_IPP,*/ self::MAPCLASS_PROJECT];
+        $mapClasses = [self::MAPCLASS_IPP, self::MAPCLASS_PROJECT];
         echo "--- Begin sending email --- \r\n";
         foreach ($mapClasses as $mapclass) {
             $count = $this->runDbQueue($mapclass);
@@ -93,7 +94,7 @@ class MailQueueAction extends Action
         $emailSentCount = 0;
         foreach ($queueList as $queue) {
             $statusNotify = $this->getStatusNotify($queue);
-            if ($this->sendmail($statusNotify)) {
+            if ($this->sendmail($statusNotify, $queue->list_files)) {
                 $queue->success = 1;
                 $queue->date_sent = date('Y-m-d H:i:s');
                 $emailSentCount++;
@@ -132,70 +133,33 @@ class MailQueueAction extends Action
      * Send Mail
      * 
      * @param StatusNotifyInterface $statusNotify
+     * @param json $listFileJson
      * @return bool
      */
-    protected function sendmail(StatusNotifyInterface $statusNotify)
+    protected function sendmail(StatusNotifyInterface $statusNotify, $listFileJson)
     {
         $viewFile = $statusNotify->getViewFile();
         $message = $statusNotify->getMessage();
+        $toEmail = $message->to;
+        $ccEmail = $message->cc;
+        $subject = $message->subject;
         $params = (array)$statusNotify->getParams();
+        $message = $this->mailer->compose($viewFile, compact('params'));
 
-        return $this->mailer
-            ->compose($viewFile, $params)
-            ->setFrom($this->sender->getEmail())
-            ->setTo($message->to)
-            ->setCC($message->cc)
-            ->setSubject($message->subject)
-            ->send();
-
-        //$this->mailer->Host     = 'mail.pkpu.or.id'; /*'120.89.94.205'*/
-        /*$this->mailer->isSMTP();  // Set mailer to use SMTP
-        $this->mailer->Host = '184.173.153.194'; //smtp.mailgun.org
-        $this->mailer->SMTPAuth = true;
-        $this->mailer->Username = 'postmaster@mg.pkpu.or.id';
-        $this->mailer->Password = 'fb7ce3982c9c2ab7df5ea6a55bd00197';
-        $this->mailer->SMTPSecure = 'tls';*/
-        /*$this->mailer->From     = $queueItem->from_email;
-        $this->mailer->FromName = $queueItem->from_name;
-        $this->mailer->AddReplyTo('project@pkpu.or.id'); //TODO
-
-        $split = explode(',', $queueItem->to_email);
-        if (count($split)>0 && !empty($split[0])) {
-            foreach ($split as $to_email) {
-                if (filter_var(trim($to_email), FILTER_VALIDATE_EMAIL)) {
-                    $this->mailer->AddAddress($to_email);
-                } elseif (filter_var(trim($queueItem->to_email), FILTER_VALIDATE_EMAIL)) {
-                    $this->mailer->AddAddress($queueItem->to_email);
-                }
-            }
-        }
-
-        $split = explode(',', $queueItem->cc_email);
-        if (count($split)>0 && !empty($split[0])) {
-            foreach ($split as $cc_email) {
-                if (filter_var(trim($cc_email), FILTER_VALIDATE_EMAIL)) {
-                    $this->mailer->AddCC($cc_email);
-                } elseif (filter_var(trim($queueItem->cc_email), FILTER_VALIDATE_EMAIL)) {
-                    $this->mailer->AddCC($queueItem->cc_email);
-                }
-            }
-        }
-
-        $this->mailer->CharSet  = 'UTF-8';
-        $this->mailer->Subject  = $queueItem->subject;
-        $this->mailer->Body     = $content;
-        $this->mailer->IsHTML(true);
-
-        $files = @json_decode($queueItem->list_files);
-
+        $files = @json_decode($listFileJson);
         if (is_array($files) && count($files)) {
             foreach ($files as $id) {
-                if ($file = File::model()->findByPK($id)) {
-                    $this->mailer->addAttachment("{$this->documentPath}{$file->location}", $file->file_name);
+                if ($file = File::findOne($id)) {
+                    $message->attach("{$this->documentPath}{$file->location}");
                 }
             }
-        }*/
+        }
 
-        // return $this->mailer->Send();
+        return $message
+            ->setFrom($this->sender->getEmail())
+            ->setTo($toEmail)
+            ->setCC($ccEmail)
+            ->setSubject($subject)
+            ->send();
     }
 }
