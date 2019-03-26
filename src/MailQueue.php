@@ -40,7 +40,7 @@ class MailQueue extends BaseObject
             'from_email' => $sender->userEmail,
             'from_name' => $sender->userName,
             'subject' => $message->subject,
-            'mapclass_name' => get_class($model),
+            'mapclass_name' => $this->getClassnameShort($model),
             'mapclass_id' => $model->id,
             'notif_type' => $event->getName(),
             'date_published' => new Expression('NOW()'),
@@ -72,8 +72,16 @@ class MailQueue extends BaseObject
         return null;
     }
 
-    public function formatAddress($messageAddress)
+    protected function formatAddress($messageAddress)
     {
         return implode(',', array_keys($messageAddress));
+    }
+
+    protected function getClassnameShort($object) {
+        if ($reflect = new \ReflectionClass($object)) {
+            return $reflect->getShortName();
+        } else {
+            return null;
+        }
     }
 }

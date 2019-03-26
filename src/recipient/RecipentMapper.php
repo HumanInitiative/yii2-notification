@@ -47,7 +47,7 @@ class RecipentMapper
         return $this->iterateEmails($this->mapperCc);
     }
 
-    public function iterateEmails(RecipientAddressInterface $mapper)
+    protected function iterateEmails(RecipientAddressInterface $mapper)
     {
         $emailTo = [];
         foreach($mapper->getAll() as $record) {
