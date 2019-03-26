@@ -63,7 +63,7 @@ class MailQueueAction extends Action
 
     public function run()
     {
-        $mapClasses = [self::MAPCLASS_IPP, self::MAPCLASS_PROJECT];
+        $mapClasses = [/*self::MAPCLASS_IPP,*/ self::MAPCLASS_PROJECT];
         echo "--- Begin sending email --- \r\n";
         foreach ($mapClasses as $mapclass) {
             $count = $this->runDbQueue($mapclass);
@@ -93,7 +93,7 @@ class MailQueueAction extends Action
         $emailSentCount = 0;
         foreach ($queueList as $queue) {
             $statusNotify = $this->getStatusNotify($queue);
-            if ($this->sendmail($queue, $statusNotify)) {
+            if ($this->sendmail($statusNotify)) {
                 $queue->success = 1;
                 $queue->date_sent = date('Y-m-d H:i:s');
                 $emailSentCount++;
@@ -140,15 +140,12 @@ class MailQueueAction extends Action
         $message = $statusNotify->getMessage();
         $params = (array)$statusNotify->getParams();
 
-        var_dump($viewFile);
-        exit;
-
         return $this->mailer
             ->compose($viewFile, $params)
             ->setFrom($this->sender->getEmail())
             ->setTo($message->to)
-            ->setSubject($message->subject)
             ->setCC($message->cc)
+            ->setSubject($message->subject)
             ->send();
 
         //$this->mailer->Host     = 'mail.pkpu.or.id'; /*'120.89.94.205'*/

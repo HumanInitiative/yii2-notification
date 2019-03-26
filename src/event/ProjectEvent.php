@@ -69,23 +69,23 @@ class ProjectEvent extends ModelEvent implements ModelEventInterface
 
     public function getEventFile()
     {
-        if ($this->name == Event::EVENT_CREATE) {
+        if ($this->name == ProjectActionEvent::EVENT_CREATE) {
             return "project-create";
-        } elseif ($this->name == Event::EVENT_VERIFY_QC) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFY_QC) {
             return "project-verify-qaqc";
-        } elseif ($this->name == Event::EVENT_VERIFY_RMD) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFY_RMD) {
             return "project-verify-ramadhan";
-        } elseif ($this->name == Event::EVENT_COMMENT) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_COMMENT) {
             return "project-comment";
-        } elseif ($this->name == Event::EVENT_RUNNING) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_RUNNING) {
             return "project-running";
-        } elseif ($this->name == Event::EVENT_FINISHING) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_FINISHING) {
             return "project-finishing";
-        } elseif ($this->name == Event::EVENT_VERIFYFINISH) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_VERIFYFINISH) {
             return "project-verify-finish";
-        } elseif ($this->name == Event::EVENT_ALERT_EXECDATE) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_ALERT_EXECDATE) {
             return "project-alert-execdate";
-        } elseif ($this->name == Event::EVENT_UPLOAD_REPORT) {
+        } elseif ($this->name == ProjectActionEvent::EVENT_UPLOAD_REPORT) {
             return "project-report-upload";
         }
     }
