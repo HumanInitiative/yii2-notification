@@ -31,6 +31,11 @@ class IppEvent extends ModelEvent implements ModelEventInterface
         return $this->id;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function getStatusId()
     {
         return $this->status_id;
