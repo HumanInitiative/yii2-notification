@@ -16,7 +16,6 @@ use yii\mail\MailerInterface;
  */
 class ProjectEmailBehavior extends Behavior
 {
-    protected $mailQueue;
     protected $mailer;
     protected $sender;
 

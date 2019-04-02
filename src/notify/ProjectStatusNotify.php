@@ -54,11 +54,11 @@ class ProjectStatusNotify implements StatusNotifyInterface
             $this->event->eventDesc
         );
         // Compose mail
-        $this->message = new Message;
-        $this->message->to = $this->recipientMapper->getToAddress();
-        $this->message->cc = $this->recipientMapper->getCcAddress();
-        $this->message->subject = $subject;
-        return $this->message;
+        $this->_message = new Message;
+        $this->_message->to = $this->recipientMapper->getToAddress();
+        $this->_message->cc = $this->recipientMapper->getCcAddress();
+        $this->_message->subject = $subject;
+        return $this->_message;
     }
     /**
      * @inheritdoc

@@ -10,10 +10,10 @@ use yii\db\ActiveRecordInterface;
  */
 class ProjectEvent extends ModelEvent implements ModelEventInterface
 {
-    private $id;
-    private $status_id;
-    private $execdate_start;
-    private $is_ramadhan;
+    protected $id;
+    protected $status_id;
+    protected $execdate_start;
+    protected $is_ramadhan;
 
     public function __construct(ActiveRecordInterface $model, $eventName)
     {

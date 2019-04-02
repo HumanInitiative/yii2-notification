@@ -3,12 +3,13 @@
 namespace pkpudev\notification\behavior;
 
 use pkpudev\notification\EmailNotifJob;
+use pkpudev\notification\MailQueue;
 use pkpudev\notification\event\IppActionEvent as Event;
 use pkpudev\notification\notify\IppStatusNotify;
+use pkpudev\notification\recipient\Recipient;
 use pkpudev\notification\transform\IppTransform;
 use yii\base\Behavior;
 use yii\mail\MailerInterface;
-use yii\queue\Queue;
 
 /**
  * Behavior for Ipp Model
@@ -23,49 +24,49 @@ use yii\queue\Queue;
  */
 class IppEmailBehavior extends Behavior
 {
-	private $mailQueue;
-	private $mailer;
+    protected $mailer;
+    protected $sender;
 
-	public function setMailQueue(Queue $mailQueue)
-	{
-		$this->mailQueue = $mailQueue;
-	}
+    public function setMailer(MailerInterface $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
-	public function setMailer(MailerInterface $mailer)
-	{
-		$this->mailer = $mailer;
-	}
+    public function setSender(Recipient $sender)
+    {
+        $this->sender = $sender;
+    }
 
-	/**
-	 * Map events with their respective function
-	 */
-	public function events()
-	{
-		return [
-			// Ipp
-			Event::EVENT_CREATE => 'onEvent', //default
-			Event::EVENT_SET_NEW => 'onEvent',
-			Event::EVENT_APPROVE_KEU => 'onEvent',
-			Event::EVENT_APPROVE_QC => 'onEvent',
-			Event::EVENT_APPROVE_PDG => 'onEvent',
-			Event::EVENT_REJECT => 'onEvent',
-			Event::EVENT_REVISI_KEU => 'onEvent',
-			Event::EVENT_FEE_MANAGEMENT => 'onEvent',
-			// File
-			Event::EVENT_UPLOAD_FILE => 'onEvent',
-			Event::EVENT_DELETE_FILE => 'onEvent',
-		];
-	}
+    /**
+     * Map events with their respective function
+     */
+    public function events()
+    {
+        return [
+            // Ipp
+            Event::EVENT_CREATE => 'onEvent', //default
+            Event::EVENT_SET_NEW => 'onEvent',
+            Event::EVENT_APPROVE => 'onEvent',
+            Event::EVENT_APPROVE_RAMADHAN => 'onEvent',
+            Event::EVENT_REJECT => 'onEvent',
+            Event::EVENT_REVISI => 'onEvent',
+            Event::EVENT_FEE_MANAGEMENT => 'onEvent',
+            // File
+            Event::EVENT_UPLOAD_FILE => 'onEvent',
+            Event::EVENT_DELETE_FILE => 'onEvent',
+        ];
+    }
 
-	/**
-	 * Triggered on event
-	 */
-	public function onEvent($event)
-	{
-		$transform = new IppTransform($this->owner);
-		$statusNotify = new IppStatusNotify($transform, $event);
-		$sender = new Recipient; //TODO
-		$job = new EmailNotifJob($this->mailer, $statusNotify, $sender);
-		$this->mailQueue->push($job);
-	}
+    /**
+     * Triggered on event
+     */
+    public function onEvent($event)
+    {
+        $transform = new IppTransform($this->owner);
+        $statusNotify = new IppStatusNotify($transform, $event);
+        $job = new EmailNotifJob($this->mailer, $statusNotify, $this->sender);
+        // Push Job
+        $mailQueue = new MailQueue($job);
+        $mailQueue->push();
+    }
 }
