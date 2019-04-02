@@ -61,7 +61,7 @@ class IppEvent extends ModelEvent implements ModelEventInterface
     {
         if ($this->name == IppActionEvent::EVENT_CREATE) {
             return "telah dibuat";
-        } elseif ($this->name == IppActionEvent::EVENT_APPROVE_KEU) {
+        } elseif ($this->name == IppActionEvent::EVENT_APPROVE) {
             return "di-APPROVE Keuangan";
         } elseif ($this->name == IppActionEvent::EVENT_FEE_MANAGEMENT) {
             return "Fee Management";
@@ -76,7 +76,7 @@ class IppEvent extends ModelEvent implements ModelEventInterface
     {
         if ($this->name == IppActionEvent::EVENT_CREATE) {
             return "ipp-create";
-        } elseif ($this->name == IppActionEvent::EVENT_APPROVE_KEU) {
+        } elseif ($this->name == IppActionEvent::EVENT_APPROVE) {
             return "ipp-approve";
         } elseif ($this->name == IppActionEvent::EVENT_FEE_MANAGEMENT) {
             return "ipp-feemgmt";
