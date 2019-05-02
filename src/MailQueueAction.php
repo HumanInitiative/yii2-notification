@@ -89,6 +89,7 @@ class MailQueueAction extends Action
             ->where(['mapclass_name'=>$mapclass])
             ->andWhere(['or', ['success'=>null], ['not', ['success'=>1]]])
             ->andWhere(['or', ['attempts'=>null], ['<=', 'attempts', self::MAX_ATTEMTPS]])
+            ->andWhere(['and', ['not', ['to_email'=>'']], ['not', ['to_email'=>',,,,']]])
             ->all();
 
         $emailSentCount = 0;
