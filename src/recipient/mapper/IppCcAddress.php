@@ -45,6 +45,7 @@ class IppCcAddress implements RecipientAddressInterface
     public function getAll()
     {
         $eventName = $this->event->name;
+        $eventIsRamadhan = $this->event->getIsRamadhan();
         $emails = null;
 
         if ($eventName == Event::EVENT_CREATE) {
@@ -52,7 +53,10 @@ class IppCcAddress implements RecipientAddressInterface
             $emails[] =	$this->transform->getCreatorEmail(); // CREA
             $emails[] =	$this->transform->getMarketerEmail(); // MRKT
             $emails[] =	$this->transform->getManagerMarketerEmail(); // MGRMRKT
-        } elseif ($eventName == Event::EVENT_APPROVE) {
+        } elseif (in_array($eventName, [
+            Event::EVENT_APPROVE,
+            Event::EVENT_APPROVE_RAMADHAN
+        ])) {
             $emails = array_merge(
                 $this->query->getByRole(Role::PDG), // PDG
                 $this->query->getByRole(Role::QAQC), // QAQC
@@ -71,6 +75,18 @@ class IppCcAddress implements RecipientAddressInterface
                 $this->query->getByRole(Role::QAQC) // QAQC
             );
             $emails[] =	$this->transform->getManagerMarketerEmail(); // MGRMRKT
+        }
+
+        if (in_array($eventName, [
+            Event::EVENT_CREATE,
+            Event::EVENT_APPROVE,
+            Event::EVENT_APPROVE_RAMADHAN,
+            Event::EVENT_FEE_MANAGEMENT,
+            Event::EVENT_REJECT
+        ])) {
+            if ($eventIsRamadhan) {
+                $emails = array_merge($emails, $this->query->getByRole(Role::RMD));
+            }
         }
 
         return $emails;

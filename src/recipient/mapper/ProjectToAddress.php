@@ -49,6 +49,7 @@ class ProjectToAddress implements RecipientAddressInterface
     public function getAll()
     {
         $eventName = $this->event->name;
+        $eventIsRamadhan = $this->event->getIsRamadhan();
         $emails = null;
 
         if ($eventName == Event::EVENT_CREATE) {

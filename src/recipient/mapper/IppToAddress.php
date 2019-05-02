@@ -76,7 +76,12 @@ class IppToAddress implements RecipientAddressInterface
                     $emails = array_merge($emails, $this->query->getByRole(Role::QAQC)); // QAQC
                 }
             }
-        } elseif ($eventName == Event::EVENT_APPROVE) {
+        } elseif ($eventName == Event::EVENT_REVISI) {
+            $emails = $this->transform->getCreatorEmail(); // CREA
+        } elseif (in_array($eventName, [
+            Event::EVENT_APPROVE,
+            Event::EVENT_APPROVE_RAMADHAN
+        ])) {
             if ($branchId == $this->pusat) {
                 // PIC
                 $emails = [$this->transform->getPicEmail()]; // PIC

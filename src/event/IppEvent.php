@@ -15,6 +15,7 @@ class IppEvent extends ModelEvent implements ModelEventInterface
     protected $company_id;
     protected $fund_driven_id;
     protected $from_izi;
+    protected $is_ramadhan;
 
     public function __construct(ActiveRecordInterface $model, $eventName)
     {
@@ -24,6 +25,7 @@ class IppEvent extends ModelEvent implements ModelEventInterface
         $this->company_id = $model->company_id;
         $this->fund_driven_id = $model->fund_driven_id;
         $this->from_izi = $model->from_izi;
+        $this->is_ramadhan = $model->getIsRamadhan();
     }
 
     public function getId()
@@ -55,6 +57,11 @@ class IppEvent extends ModelEvent implements ModelEventInterface
     public function getCompanyId()
     {
         return $this->company_id;
+    }
+
+    public function getIsRamadhan()
+    {
+        return $this->is_ramadhan;
     }
 
     public function getEventDesc()
