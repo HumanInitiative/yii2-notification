@@ -22,7 +22,7 @@ class ProjectTransform implements DataTransformInterface
     public function __construct(ActiveRecordInterface $model)
     {
         $this->model = $model;
-        $this->program = $model->program;
+        $this->program = $model->getProgram()->one();
         $this->creator = $model->creator;
     }
     /**
