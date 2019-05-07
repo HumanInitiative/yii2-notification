@@ -77,7 +77,7 @@ class IppToAddress implements RecipientAddressInterface
                 }
             }
         } elseif ($eventName == Event::EVENT_REVISI) {
-            $emails = $this->transform->getCreatorEmail(); // CREA
+            $emails = [$this->transform->getCreatorEmail()]; // CREA
         } elseif (in_array($eventName, [
             Event::EVENT_APPROVE,
             Event::EVENT_APPROVE_RAMADHAN
