@@ -71,10 +71,13 @@ class IppToAddress implements RecipientAddressInterface
                     $emails = array_merge($emails, $this->query->getByRole(Role::QAQC)); // QAQC
                 }
             } else {
-                $emails = $fnGetAllFromBranch(); // Branch
-                if ($companyId) {
+                // $emails = $fnGetAllFromBranch(); // Branch
+                /*if ($companyId) {
                     $emails = array_merge($emails, $this->query->getByRole(Role::QAQC)); // QAQC
-                }
+                }*/
+                // Bugfix
+                $emails[] = $this->transform->getPicEmail(); // PIC
+                $emails[] = $this->transform->getCreatorEmail(); // CREA
             }
         } elseif ($eventName == Event::EVENT_REVISI) {
             $emails = [$this->transform->getCreatorEmail()]; // CREA
