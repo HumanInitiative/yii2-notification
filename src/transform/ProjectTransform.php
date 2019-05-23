@@ -23,6 +23,7 @@ class ProjectTransform implements DataTransformInterface
     {
         $this->model = $model;
         $this->program = $model->getProgram()->one();
+        $this->marketer = $model->marketer;
         $this->creator = $model->creator;
     }
     /**
